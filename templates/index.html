@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OS Sim: Preemptive Video Encoder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Operating Systems Simulation</p>
+          <h1>Preemptive Video Encoder with Aging</h1>
+          <p class="hero-text">
+            Watch Shortest Job First scheduling behave like a living system: arrivals,
+            context switches, queue pressure, starvation risk, and aging-based recovery.
+          </p>
+        </div>
+        <div class="hero-panel">
+          <div class="clock-card">
+            <span class="clock-label">Global Clock</span>
+            <strong id="clockLabel">00:00</strong>
+            <span id="cpuState" class="cpu-pill idle">CPU Idle</span>
+          </div>
+          <div class="stats-grid">
+            <article class="stat-card">
+              <span>Total Jobs</span>
+              <strong id="totalJobs">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Ready Queue</span>
+              <strong id="queueSize">0</strong>
+            </article>
+            <article class="stat-card">
+              <span>Completed</span>
+              <strong id="completedCount">0</strong>
+            </article>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <section class="panel composer">
+          <div class="panel-heading">
+            <div>
+              <p class="panel-kicker">Job Input</p>
+              <h2>Submit Video Encoding Workloads</h2>
+            </div>
+            <button id="resetButton" class="ghost-button" type="button">Reset Simulation</button>
+          </div>
+
+          <form id="jobForm" class="job-form">
+            <label>
+              <span>Video Name</span>
+              <input id="nameInput" name="name" type="text" maxlength="40" placeholder="Video_A" required />
+            </label>
+            <label>
+              <span>Burst Time (seconds)</span>
+              <input
+                id="burstInput"
+                name="burst_time"
+                type="number"
+                min="1"
+                max="999"
+                placeholder="30"
+                required
+              />
+            </label>
+            <button class="primary-button" type="submit">Add Job</button>
+          </form>
+
+          <p class="hint">
+            Tip: submit a long job first, then inject short jobs to watch preemption and aging work together.
+          </p>
+          <p id="feedback" class="feedback" aria-live="polite"></p>
+        </section>
+
+        <section class="panel running-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="panel-kicker">Active CPU Slot</p>
+              <h2>Current Running Job</h2>
+            </div>
+          </div>
+          <div id="runningJobCard" class="running-card empty">
+            <p>No job is using the CPU yet.</p>
+          </div>
+        </section>
+
+        <section class="panel queue-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="panel-kicker">Ready Queue</p>
+              <h2>Aging-Aware Scheduling Order</h2>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>PID</th>
+                  <th>Video</th>
+                  <th>Burst</th>
+                  <th>Remaining</th>
+                  <th>Waiting</th>
+                  <th>Effective Priority</th>
+                </tr>
+              </thead>
+              <tbody id="queueBody">
+                <tr class="empty-row">
+                  <td colspan="6">The ready queue is empty.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel completed-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="panel-kicker">Completed Jobs</p>
+              <h2>Recent Finishes</h2>
+            </div>
+          </div>
+          <div id="completedList" class="completed-list">
+            <p class="empty-copy">Completed jobs will appear here.</p>
+          </div>
+        </section>
+
+        <section class="panel log-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="panel-kicker">Terminal Log</p>
+              <h2>Scheduler Trace</h2>
+            </div>
+          </div>
+          <div id="logList" class="log-list" aria-live="polite">
+            <p class="log-line muted">Waiting for scheduler events...</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+  </body>
+</html>
